@@ -1,6 +1,6 @@
 import "./App.css";
 import Form from "./Form";
-import logo from "../public/Cordel_logo.svg";
+import logo from "../public/Cordel_logo.png";
 function App() {
   return (
     <>
