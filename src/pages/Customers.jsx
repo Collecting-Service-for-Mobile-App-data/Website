@@ -1,5 +1,6 @@
 // Import useState hook from React for managing component state.
-import  { useState } from "react";
+// Also Import useEffect to handel api calls.
+import  { useState, useEffect } from "react";
 // Import various components from @mui/material to construct a table.
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,26 +9,59 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 // Import the customers data from a local file.
-import { data } from "../assets/data";
+//import { data } from "../assets/data";
 import { TableHead } from "@mui/material";
 
-const { customers } = data;
+//const { customers } = data;
 
+// export default function CustomersPage() {
+//     // useState hook to manage the search input state.
+//   const [searchInput, setSearchInput] = useState("");
+//    // useState hook to manage the state of filtered results.
+//   const [filteredResults, setFilteredResults] = useState(customers);
+//   // Function to handle search. It filters the customers based on the input value.
+//   const searchItems = (searchValue) => {
+//     setSearchInput(searchValue);
+//     if (searchInput !== "") {
+//       const filteredData = customers.filter((item) => {
+//         return item.name.toLowerCase().includes(searchValue.toLowerCase());
+//       });
+//       setFilteredResults(filteredData);
+//     } else {
+//       setFilteredResults(customers);
+//     }
+//   };
+//
+
+/**
+ * Update function that uses api call to get the company data, and not from dummy data.
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function CustomersPage() {
-    // useState hook to manage the search input state.
-  const [searchInput, setSearchInput] = useState("");
-   // useState hook to manage the state of filtered results.
-  const [filteredResults, setFilteredResults] = useState(customers);
-  // Function to handle search. It filters the customers based on the input value.
+  const [filteredResults, setFilteredResults] = useState([]);
+  const [companies, setCompanies] = useState([]); // State to hold fetched companies
+
+  // Fetch companies when the component mounts
+  useEffect(() => {
+    fetch('http://localhost:8080/api/company/companies')
+        .then(response => response.json())
+        .then(data => {
+          setCompanies(data); // Set fetched companies
+          setFilteredResults(data); // Initialize filteredResults with all companies
+        })
+        .catch(error => console.error('Error fetching data: ', error));
+  }, []);
+
+  // Function to handle search. It filters the companies based on the input value.
   const searchItems = (searchValue) => {
-    setSearchInput(searchValue);
-    if (searchInput !== "") {
-      const filteredData = customers.filter((item) => {
-        return item.name.toLowerCase().includes(searchValue.toLowerCase());
-      });
+    if (searchValue !== "") {
+      const filteredData = companies.filter((item) =>
+          item.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
       setFilteredResults(filteredData);
     } else {
-      setFilteredResults(customers);
+      setFilteredResults(companies);
     }
   };
 
