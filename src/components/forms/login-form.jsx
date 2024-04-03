@@ -8,24 +8,43 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useForm } from "react-hook-form"; // Import from react-hook-form for form handling
-import { FormHelperText } from "@mui/material";
+import  { useState } from "react";
 
 // Definition of the MuiLoginForm component with `loginAction` as its prop
 // eslint-disable-next-line react/prop-types
 function MuiLoginform({ loginAction }) {
-// Initialization of form handling hooks from react-hook-form
+
   const form = useForm({
-    defaultValues: {
+   defaultValues: {
       email: "",
-      password: "",
+     password: "",
     },
-  });
+ });
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
+  const [backendError, setBackendError] = useState('');
 
-  // Function to handle form submission
-  const onSubmit = (data) => {
-    loginAction(data);
+    const onSubmit = async (data) => {
+        const loginEndpoint = "http://localhost:8080/api/user/authenticate";
+        console.log("Sending data", data);
+        try {
+            const response = await fetch(loginEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+                const responseBody = await response.json();
+                loginAction(responseBody.jwt);
+                setBackendError('');
+            } else {
+                const errorResponse = await response.json();
+                setBackendError(errorResponse.message || 'An error occurred');
+            }
+        } catch (error) {
+            console.error('Login request failed:', error);
+            setBackendError('An error occurred during login.');
+        }
   };
 
    // Component return statement, defining the JSX structure of the login form
@@ -48,9 +67,6 @@ function MuiLoginform({ loginAction }) {
               }}
             >
               {/* Helper text indicating credentials requirement */}
-              <FormHelperText>
-                Bruk passordet : &quot;test123&quot;
-              </FormHelperText>
               {/* Email input field with validation and styling */}
               <FormControl required>
                 <TextField
@@ -141,6 +157,8 @@ function MuiLoginform({ loginAction }) {
                 Forgot Password?
               </Link>
             </Box>
+              {/* Display backend error message if present */}
+              {backendError && <div style={{ color: 'red', marginBottom: '10px' }}>{backendError}</div>}
             {/* Login button with styling */}
             <Button
               type="submit"
