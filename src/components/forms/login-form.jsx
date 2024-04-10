@@ -7,8 +7,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"; // Import from react-hook-form for form handling
 import  { useState } from "react";
+import { useAuthSelector } from "../../auth/Auth";
 
 // Definition of the MuiLoginForm component with `loginAction` as its prop
 // eslint-disable-next-line react/prop-types
@@ -23,28 +25,19 @@ function MuiLoginform({ loginAction }) {
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   const [backendError, setBackendError] = useState('');
+  const navigate = useNavigate();
 
-    const onSubmit = async (data) => {
-        const loginEndpoint = "http://localhost:8080/api/user/authenticate";
-        console.log("Sending data", data);
-        try {
-            const response = await fetch(loginEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            if (response.ok) {
-                const responseBody = await response.json();
-                loginAction(responseBody.jwt);
-                setBackendError('');
-            } else {
-                const errorResponse = await response.json();
-                setBackendError(errorResponse.message || 'An error occurred');
-            }
-        } catch (error) {
-            console.error('Login request failed:', error);
-            setBackendError('An error occurred during login.');
-        }
+  const { login } = useAuthSelector(); // Use the login function from the context
+
+  const onSubmit = async (data) => {
+    try {
+      await login(data.email, data.password); // Call the login function from the AuthProvider
+      setBackendError(''); // Reset any backend errors on successful login
+      navigate('/sql-errors'); // Redirect or perform any post-login actions here
+    } catch (error) {
+      console.error('Login request failed:', error);
+      setBackendError(error.message || 'An error occurred during login.');
+    }
   };
 
    // Component return statement, defining the JSX structure of the login form

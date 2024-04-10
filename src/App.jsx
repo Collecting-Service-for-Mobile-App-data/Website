@@ -30,7 +30,7 @@ function App() {
               {/* Route for the homepage ("/") is wrapped in PrivateRoute to require authentication */}
               <Route exact path="/" element={<PrivateRoute />}>
                 {/* Nested routes under the homepage for specific pages */}
-                <Route path="" element={<CustomersPage />} />
+                <Route path="/cutsomer" element={<CustomersPage />} />
                 <Route path="sql-errors" element={<SqlErrorsPage />} />
               </Route>
               {/* Route for the login page ("/login") */}

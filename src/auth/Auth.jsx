@@ -1,6 +1,5 @@
 // Importing necessary hooks from React for state and context management
 import { createContext, useContext, useState } from "react";
-
 // Creating a Context object for authentication-related data and functions
 const AuthContext = createContext();
 
@@ -14,26 +13,45 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({ data: null, isAuthenticated: false });
 
     // Function to simulate user login
+  // Function to simulate user login with backend integration
   const login = (email, password) => {
     return new Promise((resolve, reject) => {
-      // If the password is correct, set the user as authenticated
-      if (password === "test123") {
+      fetch('http://localhost:8080/api/user/authenticate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Login failed');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Correctly access the token using 'jwt' as per the backend's response structure
+        console.log('Received token:', data.jwt);
+
+        // Store the token for future requests using 'jwt'
+        localStorage.setItem('authToken', data.jwt);
+
+        // Update the user state
         setUser({
           data: {
             email,
-            // Extracting name from email for demonstration purposes
-            name: `${email}`.split("@")[0],
           },
           isAuthenticated: true,
         });
         resolve("success");
-      } else {
-        // Reject the promise if the password is incorrect
-        reject("Incorrect password");
-      }
+      })
+      .catch(error => {
+        console.error('Login Error:', error);
+        reject(error);
+      });
     });
   };
-
+  
 
     // Function to log the user out
   const logout = () => {
