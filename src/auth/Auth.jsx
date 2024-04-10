@@ -64,12 +64,10 @@ export const AuthProvider = ({ children }) => {
       });
     });
   };
-  
 
-    // Function to log the user out
   const logout = () => {
-    // Resetting the user state to its default values
     setUser({ data: null, isAuthenticated: false });
+    localStorage.removeItem('authToken');
   };
 
   // Returning the Provider component from AuthContext with the current state and functions as its value

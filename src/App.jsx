@@ -2,7 +2,7 @@
 import { Fragment } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Import the PrivateRoute component for protected routes
-import { PrivateRoute } from "./routes";
+import { PrivateRoute, PublicRoute } from "./routes";
 // Import the AuthProvider component to wrap the app and provide authentication context
 import { AuthProvider } from "./auth/Auth";
 // Import the Navbar component to display a navigation bar across the application
@@ -31,10 +31,10 @@ function App() {
               <Route exact path="/" element={<PrivateRoute />}>
                 {/* Nested routes under the homepage for specific pages */}
                 <Route path="/customer" element={<CustomersPage />} />
-                <Route path="sql-errors" element={<SqlErrorsPage />} />
+                <Route path="/sql-errors" element={<SqlErrorsPage />} />
               </Route>
               {/* Route for the login page ("/login") */}
-              <Route exact path="/login" element={<LoginPage />} />
+              <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
             </Routes>
           </Fragment>
         </BrowserRouter>
@@ -42,6 +42,4 @@ function App() {
     </div>
   );
 }
-
-// Export the App component for use in the application
 export default App;
