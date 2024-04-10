@@ -1,5 +1,5 @@
 // Importing necessary hooks from React for state and context management
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 // Creating a Context object for authentication-related data and functions
 const AuthContext = createContext();
 
@@ -11,6 +11,19 @@ export const useAuthSelector = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     // State to hold user information and authentication status
   const [user, setUser] = useState({ data: null, isAuthenticated: false });
+
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      // Assuming the presence of a token means the user is authenticated
+      // This is a simplification. In a real app, you might want to verify the token's validity with the server
+      setUser({ isAuthenticated: true });
+    }
+  };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
     // Function to simulate user login
   // Function to simulate user login with backend integration

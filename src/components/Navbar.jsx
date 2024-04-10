@@ -61,7 +61,7 @@ export const Navbar = () => {
           {user.isAuthenticated ? (
             <>
             {/* Links available to authenticated users */}
-              <Link className="border border-white py-2 px-3 rounded" to="/">
+              <Link className="border border-white py-2 px-3 rounded" to="/customer">
                 Customers
               </Link>
               <Link

@@ -14,7 +14,7 @@ import { useAuthSelector } from "../../auth/Auth";
 
 // Definition of the MuiLoginForm component with `loginAction` as its prop
 // eslint-disable-next-line react/prop-types
-function MuiLoginform({ loginAction }) {
+function MuiLoginform() {
 
   const form = useForm({
    defaultValues: {
@@ -33,7 +33,7 @@ function MuiLoginform({ loginAction }) {
     try {
       await login(data.email, data.password); // Call the login function from the AuthProvider
       setBackendError(''); // Reset any backend errors on successful login
-      navigate('/sql-errors'); // Redirect or perform any post-login actions here
+      navigate('/customer'); // Redirect or perform any post-login actions here
     } catch (error) {
       console.error('Login request failed:', error);
       setBackendError(error.message || 'An error occurred during login.');
