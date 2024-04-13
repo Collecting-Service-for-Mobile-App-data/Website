@@ -32,8 +32,8 @@
       fetch('http://localhost:8080/api/company/companies', requestHeaders)
           .then(response => response.json())
           .then(data => {
-            setCompanies(data); // Set fetched companies
-            setFilteredResults(data); // Initialize filteredResults with all companies
+            setCompanies(data);
+            setFilteredResults(data);
           })
           .catch(error => console.error('Error fetching data: ', error));
     }, []);
