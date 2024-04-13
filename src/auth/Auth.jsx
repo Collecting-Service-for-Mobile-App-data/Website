@@ -1,5 +1,6 @@
 // Importing necessary hooks from React for state and context management
 import { createContext, useContext, useState, useEffect } from "react";
+import {setCookie, deleteCokkie, getCookie} from "./CookieUtils.jsx";
 // Creating a Context object for authentication-related data and functions
 const AuthContext = createContext();
 
@@ -13,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({ data: null, isAuthenticated: false });
 
   const checkAuthStatus = () => {
-    const token = localStorage.getItem('authToken');
+    const token = getCookie("jwt")
     if (token) {
       // Assuming the presence of a token means the user is authenticated
       // This is a simplification. In a real app, you might want to verify the token's validity with the server
@@ -33,7 +34,7 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
+        },  
         body: JSON.stringify({ email, password }),
       })
       .then(response => {
@@ -43,20 +44,18 @@ export const AuthProvider = ({ children }) => {
         return response.json();
       })
       .then(data => {
-        // Correctly access the token using 'jwt' as per the backend's response structure
-        console.log('Received token:', data.jwt);
-
-        // Store the token for future requests using 'jwt'
-        localStorage.setItem('authToken', data.jwt);
-
-        // Update the user state
+        setCookie("jwt", data.jwt);
+        //console.log('Received token:', data.jwt);
+        //localStorage.setItem('authToken', data.jwt);
         setUser({
           data: {
             email,
           },
           isAuthenticated: true,
         });
+
         resolve("success");
+
       })
       .catch(error => {
         console.error('Login Error:', error);
@@ -67,7 +66,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser({ data: null, isAuthenticated: false });
-    localStorage.removeItem('authToken');
+    deleteCokkie("jwt");
   };
 
   // Returning the Provider component from AuthContext with the current state and functions as its value

@@ -13,6 +13,7 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import dummy from "../assets/dummy.pdf";
 import {useEffect, useState} from "react";
 import { useLocation } from 'react-router-dom';
+import {getCookie} from "../auth/CookieUtils.jsx";
 
 
 // Function to handle the file download (currently only pdf, will change to BLOB (SQL-files) later.)
@@ -38,11 +39,17 @@ export default function EnhancedTable() {
   const companyId = query.get('companyId');
 
   useEffect(() => {
+    const requestHeaders = {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + getCookie("jwt")
+      }
+    };
     let url = 'http://localhost:8080/api/sqlite-files/all';
     if(companyId) {
       url = `http://localhost:8080/api/sqlite-files/company/${companyId}`;
     }
-    fetch(url)
+    fetch(url, requestHeaders)
         .then(response => response.json())
         .then(data => {
           setSearchInput(data);

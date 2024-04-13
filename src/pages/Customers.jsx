@@ -10,6 +10,7 @@
   import Paper from "@mui/material/Paper";
   import { TableHead } from "@mui/material";
   import { useNavigate } from "react-router-dom";
+  import {getCookie} from "../auth/CookieUtils.jsx";
 
   /**
    * Update function that uses api call to get the company data, and not from dummy data.
@@ -21,9 +22,14 @@
     const [companies, setCompanies] = useState([]); // State to hold fetched companies
     const navigate = useNavigate();
 
-    // Fetch companies when the component mounts
     useEffect(() => {
-      fetch('http://localhost:8080/api/company/companies')
+      const requestHeaders = {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + getCookie("jwt")
+        }
+      };
+      fetch('http://localhost:8080/api/company/companies', requestHeaders)
           .then(response => response.json())
           .then(data => {
             setCompanies(data); // Set fetched companies
