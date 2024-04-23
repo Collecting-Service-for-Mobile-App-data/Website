@@ -15,8 +15,8 @@ import { Checkbox } from "@mui/material"; // Import Checkbox from Material UI
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCookie } from "../auth/CookieUtils.jsx";
-import { orange } from '@mui/material/colors';
-
+import { orange } from "@mui/material/colors";
+import { format } from "date-fns";
 
 // Function to handle the file download (currently only pdf, will change to BLOB (SQL-files) later.)
 const handleDownload = (fileUrl) => {
@@ -215,7 +215,7 @@ export default function EnhancedTable() {
                     paddingTop: "40px",
                   }}
                 >
-                  {item.date}
+                  {format(new Date(item.date), "MMMM do yyyy, h:mm:ss a")}
                 </TableCell>
                 <TableCell
                   align="center"
@@ -236,9 +236,7 @@ export default function EnhancedTable() {
                     paddingBottom: "5px",
                     paddingTop: "40px",
                   }}
-                >
-                  {item.file}
-                </TableCell>
+                ></TableCell>
                 <TableCell
                   align="left"
                   sx={{
