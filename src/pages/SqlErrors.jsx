@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import styled from "styled-components";
 import moment from "moment";
-import { FaSortAmountDown, FaSortAmountUp, FaSort } from "react-icons/fa";
+import { FaSortAmountDown, FaSortAmountUp, FaSort, FaRegTrashAlt } from "react-icons/fa";
 // Icon from Material UI for the download button
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 // Importing the list of SQL error-customers and a dummy file for download
@@ -132,6 +132,30 @@ export default function EnhancedTable() {
         localStorage.setItem(id, JSON.stringify(currentlyChecked));
       });
   };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/sqlite-files/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + getCookie("jwt"),
+        },
+      });
+  
+      if (response.ok) {
+        console.log("File deleted successfully");
+        const filteredData = filteredResults.filter((item) => item.id !== id);
+        setFilteredResults(filteredData);
+      } else {
+        throw new Error("Failed to delete file"); // Throw an error for handling
+      }
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      // Optionally, display an error message to the user
+    }
+  };
+  
+  
 
   // Function to filter SQL errors based on search input
   const searchItems = (searchValue) => {
@@ -259,19 +283,84 @@ export default function EnhancedTable() {
         <Table sx={{ width: 800, margin: "auto" }} aria-label="simple table">
           <TableHead>
             <TableRow>
-                <TableCell align="center">State</TableCell>
-              <TableCell>ID</TableCell>
-              <TableCell>Date & Time</TableCell>
-              <TableCell align="center">User</TableCell>
-              <TableCell></TableCell>
-              <TableCell>Download</TableCell>
+            <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >State</TableCell>
+              <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >ID</TableCell>
+              <TableCell
+                  align="left"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >Date & Time</TableCell>
+              <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >User</TableCell>
+              <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                ></TableCell>
+              <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >Download</TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredResults.map((item) => (
               <TableRow key={item.id} sx={{}}>
                 {/* Table cells for error details */}
-                <TableCell align="center">
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >
                   <Checkbox
                     checked={!!checkedState[item.id]} // Ensure this evaluates to true or false correctly
                     onChange={() => handleCheckboxChange(item.id)}
@@ -332,7 +421,7 @@ export default function EnhancedTable() {
                   {item.file}
                 </TableCell>
                 <TableCell
-                  align="left"
+                  align="center"
                   sx={{
                     fontSize: "1rem",
                     borderBottom: "1px solid black",
@@ -350,6 +439,18 @@ export default function EnhancedTable() {
                   >
                     <FileDownloadOutlinedIcon />
                   </button>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontSize: "1rem",
+                    borderBottom: "1px solid black",
+                    paddingBottom: "5px",
+                    paddingTop: "40px",
+                  }}
+                >
+                <button onClick={() => handleDelete(item.id)}>
+                    <FaRegTrashAlt style={{ color: "red" }}/></button>
                 </TableCell>
               </TableRow>
             ))}
