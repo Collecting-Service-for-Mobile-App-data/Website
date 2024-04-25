@@ -259,12 +259,10 @@ export default function EnhancedTable() {
         <Table sx={{ width: 800, margin: "auto" }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">
-                <TableCell>State</TableCell>
-              </TableCell>
+                <TableCell align="center">State</TableCell>
               <TableCell>ID</TableCell>
               <TableCell>Date & Time</TableCell>
-              <TableCell>User</TableCell>
+              <TableCell align="center">User</TableCell>
               <TableCell></TableCell>
               <TableCell>Download</TableCell>
             </TableRow>
