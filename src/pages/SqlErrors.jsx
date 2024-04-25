@@ -7,6 +7,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import styled from 'styled-components';
+import { FaSortAmountDown, FaSortAmountUp, FaSort } from 'react-icons/fa';
+
 // Icon from Material UI for the download button
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 // Importing the list of SQL error-customers and a dummy file for download
@@ -50,10 +53,13 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 export default function EnhancedTable() {
-  // State for managing search input and filtered results
+  // State for managing data, search, checked state, and sorting
+  const [data, setData] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [searchInput, setSearchInput] = useState([]);
   const [checkedState, setCheckedState] = useState({});
+  const [sortBy, setSortBy] = useState(""); // State to track sort criteria (date or checked)
+  const [sortDirection, setSortDirection] = useState("asc"); // State to track sort direction (asc or desc)
 
   const query = useQuery();
   const companyId = query.get("companyId");
@@ -70,31 +76,22 @@ export default function EnhancedTable() {
       url = `http://localhost:8080/api/sqlite-files/company/${companyId}`;
     }
     fetch(url, requestHeaders)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (!data.length) {
-            throw new Error("No data received");
-          }
-          setSearchInput(data);
-          setFilteredResults(data);
-          const initialState = {};
-          data.forEach((item) => {
-            const storedCheckState = localStorage.getItem(item.id);
-            initialState[item.id] =
-                storedCheckState !== null
-                    ? JSON.parse(storedCheckState)
-                    : Boolean(item.isChecked);
-          });
-          setCheckedState(initialState);
-        })
-        .catch((error) => {
-          console.error("Error fetching data", error);
+      .then((response) => response.json())
+      .then((fetchedData) => {
+        setData(fetchedData);
+        setSearchInput(fetchedData);
+        setFilteredResults(fetchedData);
+        const initialState = {};
+        fetchedData.forEach((item) => {
+          const storedCheckState = localStorage.getItem(item.id);
+          initialState[item.id] =
+            storedCheckState !== null
+              ? JSON.parse(storedCheckState)
+              : Boolean(item.isChecked);
         });
+        setCheckedState(initialState);
+      })
+      .catch((error) => console.error("Error fetching data", error));
   }, [companyId]);
 
   const handleCheckboxChange = (id) => {
@@ -152,6 +149,42 @@ export default function EnhancedTable() {
     event.preventDefault();
   };
 
+  const sortData = (dataToSort, sortByField, sortOrder) => {
+    return dataToSort.slice().sort((a, b) => {
+      if (sortByField === "date") {
+        return sortOrder === "asc" ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date);
+      } else if (sortByField === "checked") {
+        return sortOrder === "asc" ? (checkedState[a.id] ? -1 : 1) - (checkedState[b.id] ? -1 : 1) : (checkedState[b.id] ? -1 : 1) - (checkedState[a.id] ? -1 : 1);
+      }
+      return 0;
+    });
+  };
+
+  const handleSortClick = (sortField) => {
+    const newSortDirection = sortField === sortBy ? (sortDirection === "asc" ? "desc" : "asc") : "asc";
+    setSortBy(sortField);
+    setSortDirection(newSortDirection);
+    const sortedData = sortData(filteredResults, sortField, newSortDirection);
+    setFilteredResults(sortedData);
+  };
+
+  const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-top: 20px
+`;
+
+// Styled component for individual buttons
+const SortButton = styled.button`
+  padding: 8px 16px;           // Padding for better touch area
+  cursor: pointer;             // Cursor pointer to indicate clickable
+  &:hover {
+    background-color: #e0e0e0; // Slightly darker on hover for feedback
+  }
+`;
+
+
   // Component rendering the UI
   return (
       <Paper sx={{ width: "100%", boxShadow: "none", marginTop: 5 }}>
@@ -188,6 +221,14 @@ export default function EnhancedTable() {
             </div>
           </form>
         </div>
+        <ButtonsContainer>
+      <SortButton onClick={() => handleSortClick("date")}>
+        Sort by Date: {sortBy === "date" ? (sortDirection === "asc" ? <FaSortAmountUp /> : <FaSortAmountDown/>) : <FaSort/>}
+      </SortButton>
+      <SortButton onClick={() => handleSortClick("checked")}>
+        Sort by Done: {sortBy === "checked" ? (sortDirection === "asc" ? <FaSortAmountUp /> : <FaSortAmountDown/>) : <FaSort/>}
+      </SortButton>
+    </ButtonsContainer>
         {/* Table displaying SQL errors */}
         <TableContainer
             component={Paper}
