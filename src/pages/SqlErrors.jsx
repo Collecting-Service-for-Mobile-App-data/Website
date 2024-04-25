@@ -16,6 +16,7 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import dummy from "../assets/dummy.pdf";
 import { Checkbox } from "@mui/material"; // Import Checkbox from Material UI
 import { useEffect, useState } from "react";
+import { TableHead } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { getCookie } from "../auth/CookieUtils.jsx";
 import { orange } from "@mui/material/colors";
@@ -256,6 +257,18 @@ export default function EnhancedTable() {
         sx={{ boxShadow: "none", maxHeight: 600, width: "70%", margin: "auto" }}
       >
         <Table sx={{ width: 800, margin: "auto" }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">
+                <TableCell>State</TableCell>
+              </TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Date & Time</TableCell>
+              <TableCell>User</TableCell>
+              <TableCell></TableCell>
+              <TableCell>Download</TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {filteredResults.map((item) => (
               <TableRow key={item.id} sx={{}}>
@@ -294,7 +307,8 @@ export default function EnhancedTable() {
                     paddingTop: "40px",
                   }}
                 >
-        {new Date(item.date).toLocaleDateString('nb-NO')} {moment(item.date).format('HH:mm')}
+                  {new Date(item.date).toLocaleDateString("nb-NO")}{" "}
+                  {moment(item.date).format("HH:mm")}
                   {/* Include HH:mm for hours and minutes */}
                 </TableCell>
                 <TableCell
