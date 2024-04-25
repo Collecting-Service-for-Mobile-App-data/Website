@@ -90,7 +90,10 @@
           </div>
         </div>
         {/* Table to display the customers */}
-        <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
+        <TableContainer
+        component={Paper}
+        sx={{ boxShadow: "none", maxHeight: 600, width: "70%", margin: "auto" }}
+      >
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
