@@ -71,9 +71,9 @@ export default function EnhancedTable() {
         Authorization: "Bearer " + getCookie("jwt"),
       },
     };
-    let url = "http://localhost:8080/api/sqlite-files/all";
+    let url = "http://129.241.153.179:8080/api/sqlite-files/all";
     if (companyId) {
-      url = `http://localhost:8080/api/sqlite-files/company/${companyId}`;
+      url = `http://129.241.153.179:8080/api/sqlite-files/company/${companyId}`;
     }
     fetch(url, requestHeaders)
       .then((response) => response.json())
@@ -106,7 +106,7 @@ export default function EnhancedTable() {
     localStorage.setItem(id, JSON.stringify(newCheckedState)); // Update local storage immediately
 
     // Attempt to update the server
-    fetch(`http://localhost:8080/api/sqlite-files/checked`, {
+    fetch(`http://129.241.153.179:8080/api/sqlite-files/checked`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -133,27 +133,30 @@ export default function EnhancedTable() {
       });
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/sqlite-files/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + getCookie("jwt"),
-        },
-      });
-  
-      if (response.ok) {
-        console.log("File deleted successfully");
-        const filteredData = filteredResults.filter((item) => item.id !== id);
-        setFilteredResults(filteredData);
-      } else {
-        throw new Error("Failed to delete file"); // Throw an error for handling
-      }
-    } catch (error) {
-      console.error("Error deleting file:", error);
-      // Optionally, display an error message to the user
-    }
-  };
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this file?")) {
+            try {
+                const response = await fetch(`http://129.241.153.179:8080/api/sqlite-files/delete/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + getCookie("jwt"),
+                    },
+                });
+
+                if (response.ok) {
+                    console.log("File deleted successfully");
+                    // Update the UI to remove the deleted item
+                    const filteredData = filteredResults.filter((item) => item.id !== id);
+                    setFilteredResults(filteredData);
+                } else {
+                    throw new Error("Failed to delete file");
+                }
+            } catch (error) {
+                console.error("Error deleting file:", error);
+            }
+        }
+    };
+
   
   
 
@@ -432,7 +435,7 @@ export default function EnhancedTable() {
                   {/* Download button for each error */}
                   <button
                     onClick={() => {
-                      const downloadUrl = `http://localhost:8080/api/sqlite-files/download/${item.id}`;
+                      const downloadUrl = `http://129.241.153.179:8080/api/sqlite-files/download/${item.id}`;
                       const fileName = `sqlite_file_${item.id}.db`;
                       handleDownload(downloadUrl, fileName);
                     }}

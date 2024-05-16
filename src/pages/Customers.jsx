@@ -29,7 +29,7 @@
           'Authorization': 'Bearer ' + getCookie("jwt")
         }
       };
-      fetch('http://localhost:8080/api/company/companies', requestHeaders)
+      fetch('http://129.241.153.179:8080/api/company/companies', requestHeaders)
           .then(response => response.json())
           .then(data => {
             setCompanies(data);

@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
     const fetchAdminStatus = (token) => {
-        fetch('http://localhost:8080/api/user/sessionuser', {
+        fetch('http://129.241.153.179:8080/api/user/sessionuser', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -42,25 +42,27 @@ export const AuthProvider = ({ children }) => {
 
     const login = (email, password) => {
         return new Promise((resolve, reject) => {
-            fetch('http://localhost:8080/api/user/authenticate', {
+            fetch('http://129.241.153.179:8080/api/user/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => reject(text));
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     setCookie("jwt", data.jwt);
                     fetchAdminStatus(data.jwt);
                     resolve("success");
                 })
-                .catch(error => {
-                    console.error('Login Error:', error);
-                    reject(error);
-                });
         });
     };
+
 
   const logout = () => {
     setUser({ data: null, isAuthenticated: false });

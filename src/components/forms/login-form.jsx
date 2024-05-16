@@ -35,8 +35,7 @@ function MuiLoginform() {
       setBackendError(''); // Reset any backend errors on successful login
       navigate('/customer'); // Redirect or perform any post-login actions here
     } catch (error) {
-      console.error('Login request failed:', error);
-      setBackendError(error.message || 'An error occurred during login.');
+        setBackendError(error)
     }
   };
 
@@ -152,7 +151,7 @@ function MuiLoginform() {
             </Box>
               {/* Display backend error message if present */}
               {backendError && <div style={{ color: 'red', marginBottom: '10px' }}>{backendError}</div>}
-            {/* Login button with styling */}
+              {/* Login button with styling */}
             <Button
               type="submit"
               fullWidth
