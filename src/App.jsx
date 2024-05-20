@@ -1,18 +1,16 @@
-// Import necessary hooks and components from React and React Router
 import { Fragment } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// Import the PrivateRoute component for protected routes
 import { PrivateRoute, PublicRoute } from "./routes";
-// Import the AuthProvider component to wrap the app and provide authentication context
 import { AuthProvider } from "./auth/Auth";
-// Import the Navbar component to display a navigation bar across the application
 import { Navbar } from "./components/Navbar";
-
-
-// Import page components for different routes
 import CustomersPage from "./pages/Customers";
 import LoginPage from "./pages/Login";
 import SqlErrorsPage from "./pages/SqlErrors";
+
+
+/**
+ * App component that sets up the application's main structure, including routing and authentication.
+ */
 
 function App() {
   // The return statement defines the component's rendered output

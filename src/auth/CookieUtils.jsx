@@ -3,8 +3,6 @@
  * https://github.com/strazdinsg/app-dev/blob/main/security-demos/07-backend-frontend-jwt-auth/frontend/js/tools.js
  */
 
-
-
 export function setCookie(cookieName, cookieValue, exDays) {
     const date = new Date();
     date.setTime(date.getTime() + (exDays *24 * 60 * 60 * 1000));

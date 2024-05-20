@@ -1,7 +1,7 @@
-  // Import useState hook from React for managing component state.
-  // Also Import useEffect to handel api calls.
+// Customers.jsx
+// This component displays a list of customers and their details.
+
   import  { useState, useEffect } from "react";
-  // Import various components from @mui/material to construct a table.
   import Table from "@mui/material/Table";
   import TableBody from "@mui/material/TableBody";
   import TableCell from "@mui/material/TableCell";
@@ -12,16 +12,19 @@
   import { useNavigate } from "react-router-dom";
   import {getCookie} from "../auth/CookieUtils.jsx";
 
-  /**
-   * Update function that uses api call to get the company data, and not from dummy data.
-   * @returns {JSX.Element}
-   * @constructor
-   */
+/**
+ * CustomersPage component
+ * Fetches and displays a list of customers from an API, with search functionality.
+ */
+
   export default function CustomersPage() {
     const [filteredResults, setFilteredResults] = useState([]);
     const [companies, setCompanies] = useState([]); // State to hold fetched companies
     const navigate = useNavigate();
 
+/**
+* Fetches customer data from the API and updates state.
+*/
     useEffect(() => {
       const requestHeaders = {
         method: 'GET',
@@ -38,7 +41,10 @@
           .catch(error => console.error('Error fetching data: ', error));
     }, []);
 
-    // Function to handle search. It filters the companies based on the input value.
+/**
+ * Filters the companies based on the search input value.
+* @param {string} searchValue - The value to filter the companies by.
+ */
     const searchItems = (searchValue) => {
       if (searchValue !== "") {
         const filteredData = companies.filter((item) =>
@@ -49,17 +55,18 @@
         setFilteredResults(companies);
       }
     };
-
+  
+    /**
+   * Handles the row click and navigates to the SQL errors page for the selected company.
+   * @param {number} companyId - The ID of the company to view errors for.
+   */
     const handleRowClick = (companyId) => {
       navigate(`/sql-errors?companyId=${companyId}`);
     };
 
-    // The component's return statement renders the UI of the page.
     return (
       <Paper sx={{ width: "100%", boxShadow: "none", marginTop: 5 }}>
-        {/* Title for the Customers page */}
         <h1 className="text-4xl font-bold mb-6 text-center">Customers</h1>
-        {/* Search bar container */}
         <div style={{ width: "40%", margin: "auto" }}>
           <div className="relative w-full">
             <input
@@ -68,7 +75,6 @@
               placeholder="Search bar"
               onChange={(e) => searchItems(e.target.value)}
             />
-            {/* Search icon (uninteractive atm) */}
             <div className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-black rounded-e-[450px] border border-l-gray-300 border-l-1 focus:ring-0 focus:outline-gray-800">
               <svg
                 className="w-12 h-4"
@@ -89,7 +95,6 @@
             </div>
           </div>
         </div>
-        {/* Table to display the customers */}
         <TableContainer
         component={Paper}
         sx={{ boxShadow: "none", maxHeight: 600, width: "70%", margin: "auto" }}
@@ -101,12 +106,10 @@
                 <TableCell>Name</TableCell>
               </TableRow>
             </TableHead>
-            {/* Table body where each row represents a customer */}
             <TableBody>
               {filteredResults.map((item) => (
                 <TableRow key={item.id} onClick={() => handleRowClick(item.id)}>
                   <TableCell
-                    // component="th"
                     align="left"
                     scope="row"
                     sx={{

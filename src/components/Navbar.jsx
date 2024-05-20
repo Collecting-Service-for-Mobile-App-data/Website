@@ -1,21 +1,23 @@
-// Imports from 'react-router-dom' for navigation, 'useAuthSelector' for authentication state, and 'useState' for local state management
 import { Link } from "react-router-dom";
 import { useAuthSelector } from "../auth/Auth";
 import { useState } from "react";
 
 
-// Navbar component definition
+/**
+ * Navbar component to provide navigation and user authentication controls.
+ */
 export const Navbar = () => {
-  // Destructuring 'user' and 'logout' from the custom authentication hook
   const { user, logout } = useAuthSelector();
-  // State for managing the mobile navigation menu's visibility
   const [isOpen, setIsOpen] = useState(false);
-  // Function to toggle the navigation menu's open/close state
+
+    /**
+   * Function to toggle the navigation menu's open/close state.
+   */
   const toggle = () => {
     setIsOpen((p) => !p);
   };
 
-   // JSX structure of the Navbar component
+
   return (
     <nav className=" ">
       <div className=" flex  items-center justify-between mx-auto p-4 max-md:flex-wrap">

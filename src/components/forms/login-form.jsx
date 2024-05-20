@@ -1,4 +1,3 @@
-// Imports from Material-UI and icons for UI components and styles
 import { FormControl } from "@mui/base/FormControl";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -8,12 +7,14 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form"; // Import from react-hook-form for form handling
+import { useForm } from "react-hook-form";
 import  { useState } from "react";
 import { useAuthSelector } from "../../auth/Auth";
 
-// Definition of the MuiLoginForm component with `loginAction` as its prop
-// eslint-disable-next-line react/prop-types
+
+/**
+ * MuiLoginForm component to handle user login with form validation.
+ */
 function MuiLoginform() {
 
   const form = useForm({
@@ -27,11 +28,15 @@ function MuiLoginform() {
   const [backendError, setBackendError] = useState('');
   const navigate = useNavigate();
 
-  const { login } = useAuthSelector(); // Use the login function from the context
+  const { login } = useAuthSelector();
 
+    /**
+   * Handles form submission and login process.
+   * @param {Object} data - Form data containing email and password.
+   */
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password); // Call the login function from the AuthProvider
+      await login(data.email, data.password); 
       setBackendError(''); // Reset any backend errors on successful login
       navigate('/customer'); // Redirect or perform any post-login actions here
     } catch (error) {
@@ -39,7 +44,7 @@ function MuiLoginform() {
     }
   };
 
-   // Component return statement, defining the JSX structure of the login form
+  
   return (
     <div className="flex flex-col justify-center items-center min-h-[85vh]">
      {/* Styling for the form container */}

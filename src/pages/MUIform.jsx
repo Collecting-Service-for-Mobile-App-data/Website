@@ -1,4 +1,6 @@
-// Import statements for MUI components and hooks
+// MuiLoginform.jsx
+// This component displays a login form using Material-UI components.
+
 import { FormControl } from "@mui/base/FormControl";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -7,13 +9,17 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { useForm } from "react-hook-form"; // Hook for form handling
+import { useForm } from "react-hook-form";
 import { FormHelperText } from "@mui/material";
 
 
-// The MuiLoginform component, taking a loginAction prop for handling form submission
+/**
+ * MuiLoginform component
+ * Displays a login form with email and password fields, using Material-UI and react-hook-form.
+ * @param {Function} loginAction - Function to handle form submission and login action.
+ */
 function MuiLoginform({ loginAction }) {
-    // Initialize form handling with default values using the useForm hook
+   // Initialize form handling with default values using the useForm hook
   const form = useForm({
     defaultValues: {
       email: "",
@@ -25,12 +31,15 @@ function MuiLoginform({ loginAction }) {
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
 
-  // Function to handle form submission, calls the loginAction prop with form data
+  /**
+   * Handles form submission by calling the provided loginAction with form data.
+   * @param {Object} data - The form data containing email and password.
+   */
   const onSubmit = (data) => {
     loginAction(data);
   };
 
-  // The component's return statement, rendering the login form UI
+  // Render the login form UI
   return (
     <div className="flex flex-col justify-center items-center min-h-[85vh]">
       <div className="bg-[#DDDDDD] me-[25px] w-[280px] md:w-[400px] h-[500px] md:h-[530px] relative rounded-lg p-10 after:block after:content-[''] after:rounded-lg after:bg-[#F88601] after:z-[-1] after:top-[-20px] after:bottom-[20px] after:left-[25px] after:right-[-25px] after:absolute">

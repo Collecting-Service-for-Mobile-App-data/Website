@@ -1,6 +1,7 @@
-// React import for component definition and state management
+// EnhancedTable.jsx
+// This component displays a table of SQL errors and provides functionalities such as search, sort, and delete.
+
 import * as React from "react";
-// Material UI components for constructing the table layout
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,18 +11,20 @@ import Paper from "@mui/material/Paper";
 import styled from "styled-components";
 import moment from "moment";
 import { FaSortAmountDown, FaSortAmountUp, FaSort, FaRegTrashAlt } from "react-icons/fa";
-// Icon from Material UI for the download button
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-// Importing the list of SQL error-customers and a dummy file for download
 import dummy from "../assets/dummy.pdf";
-import { Checkbox } from "@mui/material"; // Import Checkbox from Material UI
+import { Checkbox } from "@mui/material";
 import { useEffect, useState } from "react";
 import { TableHead } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { getCookie } from "../auth/CookieUtils.jsx";
 import { orange } from "@mui/material/colors";
 
-// Function to handle the file download (currently only pdf, will change to BLOB (SQL-files) later.)
+/**
+ * Handles the file download.
+ * @param {string} fileUrl - The URL of the file to download.
+ * @param {string} fileName - The name to save the file as.
+ */
 const handleDownload = (fileUrl, fileName) => {
   fetch(fileUrl, {
     method: "GET",
@@ -49,9 +52,18 @@ const handleDownload = (fileUrl, fileName) => {
     .catch((error) => console.error("Error downloading file", error));
 };
 
+/**
+ * Custom hook to parse query parameters from the URL.
+ */
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+
+
+/**
+ * EnhancedTable component
+ * Displays a table with SQL error details, providing search, sort, and delete functionalities.
+ */
 export default function EnhancedTable() {
   // State for managing data, search, checked state, and sorting
   const [data, setData] = useState([]);
@@ -94,6 +106,10 @@ export default function EnhancedTable() {
       .catch((error) => console.error("Error fetching data", error));
   }, [companyId]);
 
+    /**
+   * Handles checkbox change event, updating the state and local storage.
+   * @param {number} id - The ID of the item being checked/unchecked.
+   */
   const handleCheckboxChange = (id) => {
     const currentlyChecked = checkedState[id];
     const newCheckedState = !currentlyChecked;
@@ -133,6 +149,10 @@ export default function EnhancedTable() {
       });
   };
 
+    /**
+   * Handles the delete action for an item.
+   * @param {number} id - The ID of the item to delete.
+   */
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this file?")) {
             try {
@@ -160,7 +180,10 @@ export default function EnhancedTable() {
   
   
 
-  // Function to filter SQL errors based on search input
+  /**
+   * Filters SQL errors based on the search input.
+   * @param {string} searchValue - The value to filter the results by.
+   */
   const searchItems = (searchValue) => {
     if (searchValue !== "") {
       const filteredData = searchInput.filter((item) =>
@@ -172,10 +195,23 @@ export default function EnhancedTable() {
     }
   };
 
+
+   /**
+   * Handles the form submission to prevent default form behavior.
+   * @param {Event} event - The form submission event.
+   */
   const handleFormSubmit = (event) => {
     event.preventDefault();
   };
 
+
+    /**
+   * Sorts the data based on the given field and order.
+   * @param {Array} dataToSort - The data to be sorted.
+   * @param {string} sortByField - The field to sort by.
+   * @param {string} sortOrder - The order to sort in (asc or desc).
+   * @returns {Array} - The sorted data.
+   */
   const sortData = (dataToSort, sortByField, sortOrder) => {
     return dataToSort.slice().sort((a, b) => {
       if (sortByField === "date") {
@@ -191,6 +227,11 @@ export default function EnhancedTable() {
     });
   };
 
+
+    /**
+   * Handles the click event to sort data by the given field.
+   * @param {string} sortField - The field to sort by.
+   */
   const handleSortClick = (sortField) => {
     const newSortDirection =
       sortField === sortBy ? (sortDirection === "asc" ? "desc" : "asc") : "asc";
