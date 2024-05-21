@@ -4,6 +4,10 @@ import React from "react";
 
 React: The main library of React. to see more details, visit this link: https://reactjs.org
 
+# Test user for the app
+- username: test@gmail.com
+- password: Password1
+
 
 ### Folder Structure
 
